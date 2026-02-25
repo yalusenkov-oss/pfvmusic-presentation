@@ -18,6 +18,7 @@ export function PdfButton() {
 
     const allElements = Array.from(content.querySelectorAll<HTMLElement>("*"));
     const savedStyles: Array<{ el: HTMLElement; opacity: string; transform: string; visibility: string }> = [];
+    const originalScrollY = window.scrollY;
 
     try {
       document.documentElement.classList.add("pdf-exporting");
@@ -71,6 +72,9 @@ export function PdfButton() {
 
         for (let i = 0; i < sections.length; i += 1) {
           const section = sections[i];
+          section.scrollIntoView({ behavior: "auto", block: "start" });
+          await new Promise((resolve) => window.setTimeout(resolve, 220));
+
           const slideFrame = document.createElement("div");
           slideFrame.style.position = "relative";
           slideFrame.style.width = `${exportWidth}px`;
@@ -96,6 +100,20 @@ export function PdfButton() {
           exportRoot.innerHTML = "";
           slideFrame.appendChild(sectionClone);
           exportRoot.appendChild(slideFrame);
+
+          const cloneElements = Array.from(sectionClone.querySelectorAll<HTMLElement>("*"));
+          for (const el of cloneElements) {
+            const computed = window.getComputedStyle(el);
+            if (computed.opacity !== "1") {
+              el.style.opacity = "1";
+            }
+            if (computed.visibility !== "visible") {
+              el.style.visibility = "visible";
+            }
+            if (el.style.transform) {
+              el.style.transform = "none";
+            }
+          }
 
           const naturalHeight = Math.max(1, sectionClone.scrollHeight);
           const scale = Math.min(1, exportHeight / naturalHeight);
@@ -139,6 +157,7 @@ export function PdfButton() {
       window.alert("Не удалось сформировать PDF. Проверьте консоль браузера.");
     } finally {
       document.documentElement.classList.remove("pdf-exporting");
+      window.scrollTo({ top: originalScrollY, behavior: "auto" });
       for (const { el, opacity, transform, visibility } of savedStyles) {
         el.style.opacity = opacity;
         el.style.transform = transform;
