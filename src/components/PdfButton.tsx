@@ -65,26 +65,50 @@ export function PdfButton() {
       document.body.appendChild(exportRoot);
 
       try {
+        if (document.fonts?.ready) {
+          await document.fonts.ready;
+        }
+
         for (let i = 0; i < sections.length; i += 1) {
           const section = sections[i];
-          const sectionClone = section.cloneNode(true) as HTMLElement;
+          const slideFrame = document.createElement("div");
+          slideFrame.style.position = "relative";
+          slideFrame.style.width = `${exportWidth}px`;
+          slideFrame.style.height = `${exportHeight}px`;
+          slideFrame.style.overflow = "hidden";
+          slideFrame.style.background = "#06010f";
 
+          const sectionClone = section.cloneNode(true) as HTMLElement;
+          sectionClone.classList.add("pdf-slide-export");
+          sectionClone.style.position = "absolute";
+          sectionClone.style.top = "0";
+          sectionClone.style.left = "0";
           sectionClone.style.width = `${exportWidth}px`;
           sectionClone.style.minWidth = `${exportWidth}px`;
           sectionClone.style.maxWidth = `${exportWidth}px`;
           sectionClone.style.height = "auto";
-          sectionClone.style.minHeight = `${exportHeight}px`;
           sectionClone.style.maxHeight = "none";
           sectionClone.style.margin = "0";
           sectionClone.style.overflow = "visible";
           sectionClone.style.boxSizing = "border-box";
+          sectionClone.style.transformOrigin = "top left";
 
           exportRoot.innerHTML = "";
-          exportRoot.appendChild(sectionClone);
+          slideFrame.appendChild(sectionClone);
+          exportRoot.appendChild(slideFrame);
 
-          const captureHeight = Math.max(exportHeight, sectionClone.scrollHeight);
+          const naturalHeight = Math.max(1, sectionClone.scrollHeight);
+          const scale = Math.min(1, exportHeight / naturalHeight);
+          const scaledHeight = naturalHeight * scale;
+          const scaledWidth = exportWidth * scale;
+          const offsetY = Math.max(0, (exportHeight - scaledHeight) / 2);
+          const offsetX = Math.max(0, (exportWidth - scaledWidth) / 2);
 
-          const canvas = await html2canvas(sectionClone, {
+          sectionClone.style.transform = `scale(${scale})`;
+          sectionClone.style.left = `${offsetX}px`;
+          sectionClone.style.top = `${offsetY}px`;
+
+          const canvas = await html2canvas(slideFrame, {
             backgroundColor: "#06010f",
             scale: 2,
             useCORS: true,
@@ -92,29 +116,18 @@ export function PdfButton() {
             scrollX: 0,
             scrollY: 0,
             width: exportWidth,
-            height: captureHeight,
+            height: exportHeight,
             windowWidth: exportWidth,
             windowHeight: exportHeight,
           });
 
           const imageData = canvas.toDataURL("image/jpeg", 0.95);
-          const imageRatio = canvas.width / canvas.height;
-
-          let renderWidth = pageWidth;
-          let renderHeight = renderWidth / imageRatio;
-          if (renderHeight > pageHeight) {
-            renderHeight = pageHeight;
-            renderWidth = renderHeight * imageRatio;
-          }
-
-          const offsetX = (pageWidth - renderWidth) / 2;
-          const offsetY = (pageHeight - renderHeight) / 2;
 
           if (i > 0) {
             pdf.addPage();
           }
 
-          pdf.addImage(imageData, "JPEG", offsetX, offsetY, renderWidth, renderHeight, undefined, "FAST");
+          pdf.addImage(imageData, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
         }
       } finally {
         exportRoot.remove();

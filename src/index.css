@@ -136,6 +136,10 @@ body {
   -webkit-text-fill-color: #c4b5fd !important;
 }
 
+.pdf-exporting .pdf-slide-export {
+  min-height: 0 !important;
+}
+
 /* Tag styles for status */
 .tag-status {
   font-size: 10px;
