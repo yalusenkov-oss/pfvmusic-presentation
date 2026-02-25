@@ -54,7 +54,7 @@ export function Hero() {
         >
           PFVMUSIC
           <br />
-          <span className="bg-gradient-to-r from-purple-400 via-violet-300 to-purple-400 bg-clip-text text-transparent">
+          <span className="pdf-gradient-text bg-gradient-to-r from-purple-400 via-violet-300 to-purple-400 bg-clip-text text-transparent">
             Платформа
           </span>
           <br />

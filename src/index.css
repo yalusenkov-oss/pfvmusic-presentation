@@ -129,6 +129,13 @@ body {
   animation: pulse-slow 5s ease-in-out infinite;
 }
 
+/* html2canvas/print fallback: gradient-clipped text can render as a solid block in PDF. */
+.pdf-exporting .pdf-gradient-text {
+  background: none !important;
+  color: #c4b5fd !important;
+  -webkit-text-fill-color: #c4b5fd !important;
+}
+
 /* Tag styles for status */
 .tag-status {
   font-size: 10px;
@@ -140,4 +147,9 @@ body {
 
 @media print {
   .no-print { display: none !important; }
+  .pdf-gradient-text {
+    background: none !important;
+    color: #c4b5fd !important;
+    -webkit-text-fill-color: #c4b5fd !important;
+  }
 }

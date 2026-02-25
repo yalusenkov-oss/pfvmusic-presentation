@@ -8,7 +8,7 @@ export function PdfButton() {
   const handleDownloadPdf = async () => {
     if (isGenerating) return;
 
-    const content = document.getElementById("pdf-root");
+    const content = document.getElementById("pdf-root") ?? document.getElementById("presentation-root");
     if (!content) return;
 
     const sections = Array.from(content.querySelectorAll<HTMLElement>(".pdf-hero-page, .pdf-page"));
@@ -20,6 +20,8 @@ export function PdfButton() {
     const savedStyles: Array<{ el: HTMLElement; opacity: string; transform: string; visibility: string }> = [];
 
     try {
+      document.documentElement.classList.add("pdf-exporting");
+
       // Animation/transform styles break html2canvas captures, so we normalize them while exporting.
       for (const el of allElements) {
         const computed = window.getComputedStyle(el);
@@ -123,6 +125,7 @@ export function PdfButton() {
       console.error("PDF export failed:", error);
       window.alert("Не удалось сформировать PDF. Проверьте консоль браузера.");
     } finally {
+      document.documentElement.classList.remove("pdf-exporting");
       for (const { el, opacity, transform, visibility } of savedStyles) {
         el.style.opacity = opacity;
         el.style.transform = transform;
