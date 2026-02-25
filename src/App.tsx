@@ -8,6 +8,7 @@ import { ContractSigning } from "./components/ContractSigning";
 import { Journey } from "./components/Journey";
 import { EmailMock } from "./components/EmailMock";
 import { Footer } from "./components/Footer";
+import { PdfButton } from "./components/PdfButton";
 
 function Page({
   children,
@@ -26,7 +27,7 @@ function Page({
 
   return (
     <div
-      className={`w-full flex flex-col relative overflow-hidden ${
+      className={`pdf-page w-full flex flex-col relative overflow-hidden ${
         dark ? "bg-[#06010f]" : "bg-[#06000e]"
       }`}
     >
@@ -46,9 +47,11 @@ function Page({
 
 export function App() {
   return (
-    <div id="presentation-root">
+    <>
+      <PdfButton />
+      <div id="pdf-root">
         {/* ── Page 1: Hero ── */}
-        <div className="relative">
+        <div className="pdf-hero-page relative">
           <Hero />
         </div>
 
@@ -93,7 +96,7 @@ export function App() {
         </Page>
 
         {/* ── Page 10: Footer / CTA ── */}
-        <div className="bg-[#06010f] flex flex-col items-center px-5 sm:px-8 lg:px-10 py-14 sm:py-16 lg:py-20 relative">
+        <div className="pdf-page bg-[#06010f] flex flex-col items-center px-5 sm:px-8 lg:px-10 py-14 sm:py-16 lg:py-20 relative">
           <div className="pdf-orb pointer-events-none absolute inset-0">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/10 to-transparent" />
           </div>
@@ -102,5 +105,6 @@ export function App() {
           </div>
         </div>
       </div>
+    </>
   );
 }
