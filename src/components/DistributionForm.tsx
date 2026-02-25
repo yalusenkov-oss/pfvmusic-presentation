@@ -51,16 +51,16 @@ function Label({ text }: { text: string }) {
   );
 }
 
-export function DistributionForm() {
+export function DistributionForm({ pdfMode = false }: { pdfMode?: boolean }) {
   return (
-    <section>
+    <section className={pdfMode ? "distribution-form distribution-form-pdf" : "distribution-form"}>
       <SectionHeader
         tag="Дистрибуция"
         title="4-шаговая форма оформления релиза"
         subtitle="Всё разбито на логичные этапы — артист всегда видит прогресс и что нужно заполнить дальше"
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-6">
+      <div className={`grid gap-5 mb-6 ${pdfMode ? "grid-cols-3" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}`}>
         {/* Step 1 */}
         <FadeIn delay={0}>
           <Label text="Шаг 1 — Данные релиза" />
@@ -92,7 +92,7 @@ export function DistributionForm() {
             <MockInput label="Ссылка на обложку *" />
             <div className="text-[7px] text-gray-600 mt-1">+ Жанр, дата, язык, площадки, Pre-Save, 18+...</div>
           </ScreenMockup>
-          <p className="text-xs text-gray-600 mt-2.5 leading-relaxed">
+          <p className={`text-xs text-gray-600 mt-2.5 leading-relaxed ${pdfMode ? "hidden" : ""}`}>
             Калькулятор пересчитывает стоимость при выборе тарифа и типа релиза.
           </p>
         </FadeIn>
@@ -116,7 +116,7 @@ export function DistributionForm() {
               <MockInput label="Банковские реквизиты (для выплат)" />
             </div>
           </ScreenMockup>
-          <p className="text-xs text-gray-600 mt-2.5 leading-relaxed">
+          <p className={`text-xs text-gray-600 mt-2.5 leading-relaxed ${pdfMode ? "hidden" : ""}`}>
             Данные необходимы для формирования персонального договора.
           </p>
         </FadeIn>
@@ -145,14 +145,14 @@ export function DistributionForm() {
             </div>
             <div className="text-[7px] text-gray-600 mt-2">Без подтверждения — переход к следующему шагу невозможен.</div>
           </ScreenMockup>
-          <p className="text-xs text-gray-600 mt-2.5 leading-relaxed">
+          <p className={`text-xs text-gray-600 mt-2.5 leading-relaxed ${pdfMode ? "hidden" : ""}`}>
             Обязательный чекбокс для перехода к оплате.
           </p>
         </FadeIn>
       </div>
 
       {/* Step 4 + info */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className={`grid gap-5 ${pdfMode ? "grid-cols-2 items-start" : "grid-cols-1 lg:grid-cols-2"}`}>
         <FadeIn delay={0}>
           <Label text="Шаг 4 — Оплата" />
           <ScreenMockup url="pfvmusic.digital / дистрибуция">
@@ -181,7 +181,7 @@ export function DistributionForm() {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div className="space-y-3 lg:mt-8">
+          <div className={`space-y-3 ${pdfMode ? "" : "lg:mt-8"}`}>
             <InfoBox icon="🎯" title="Итог шага 4" text="После нажатия «Отправить» — данные уходят на проверку. Система автоматически формирует договор и отправляет ссылку для подписания на указанный email." variant="purple" />
             <InfoBox icon="🏷️" title="Как работают промокоды" text="Промокод вводится на последнем шаге. Скидка применяется мгновенно — итоговая сумма обновляется автоматически." variant="amber" />
             <InfoBox icon="⚡" title="Скорость обработки" text="После отправки заявки ссылка для подписания договора формируется автоматически — вы получите её на email сразу." variant="green" />

@@ -8,7 +8,6 @@ import { ContractSigning } from "./components/ContractSigning";
 import { Journey } from "./components/Journey";
 import { EmailMock } from "./components/EmailMock";
 import { Footer } from "./components/Footer";
-import { PdfButton } from "./components/PdfButton";
 
 function Page({
   children,
@@ -48,7 +47,6 @@ function Page({
 export function App() {
   return (
     <>
-      <PdfButton />
       <div id="pdf-root">
         {/* ── Page 1: Hero ── */}
         <div className="pdf-hero-page relative">
